@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/index.css">
+    <title>UDP Button Panel</title>
+  </head>
+  <body>
+    <div class="center">
+      <div class="panel">
+        <h1>Language Signal Sender</h1>
+        <div>
+          <button id="btn-en">English</button>
+          <button id="btn-ar">Arabic</button>
+        </div>
+        <div class="status" id="status">Ready</div>
+
+        <div class="received" id="last-received" style="margin-top:12px; font-size:0.95rem; color:#222;">
+            Last received: <span id="last-received-text">none</span>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/js/index.js" defer></script>
+  </body>
+</html>

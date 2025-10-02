@@ -1,0 +1,20 @@
+{
+    "name": "udp-web-app",
+    "version": "0.1.0",
+    "description": "Simple web app (served to an iPad) that sends UDP packets when buttons are pressed",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.3",
+        "express": "^5.1.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.10"
+    }
+}

@@ -15,13 +15,19 @@ export async function postSend(body) {
   return data;
 }
 
+/**
+ * pingHealth()
+ * returns the parsed JSON from /api/health
+ * (was previously returning boolean; changed so client can read congrats_string)
+ */
 export async function pingHealth() {
   try {
     const res = await fetch('/api/health');
     if (!res.ok) throw new Error('health check failed');
-    return true;
+    const data = await res.json();
+    return data;
   } catch (e) {
-    return false;
+    return null;
   }
 }
 

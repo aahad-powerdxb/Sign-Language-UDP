@@ -1,28 +1,297 @@
-html,body { 
-    height:100%;
-    margin:0;
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto;
+/* public/css/index.css
+   Responsive layout with consistent spacing across aspect ratios
+*/
+
+:root{
+  /* tweak these variables to change layout behavior */
+  --panel-width: clamp(320px, 72vw, 900px);
+  --panel-height: clamp(380px, 77vh, 820px);
+  --panel-padding: clamp(18px, 3.2vh, 36px);
+  --gap: clamp(12px, 2.5vh, 28px);
+  --radius: 12px;
+  --bg-opacity: 0;
+
+  --btn-width: clamp(160px, 12vw, 250px);
+  --font-xl: clamp(1.5rem, 4vw, 3rem);
+  --font-lg: clamp(1.15rem, 2.4vw, 1.6rem);
+  --font-md: clamp(1rem, 2vw, 1.25rem);
+
+  --panel-max-width-percent: 95vw;
+
+  --green-accent1: #82c240;
+  --muted: #f4f4f4;
 }
 
+/* Base */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background-color: #fff;
+  background-image: url("../img/idle_screen.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  /* preserve background aspect and avoid distortion */
+  background-size: 100% 100%;
+  color: #111;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+/* active app background */
+body.active-app {
+  background-image: url("../img/active_screen.png");
+}
+
+/* Centering container
+   By default we center the panel vertically and horizontally.
+   If you prefer the panel to sit near the bottom (like previously),
+   change `align-items: center;` -> `align-items: flex-end;`
+   and uncomment the --panel-bottom-padding usage below.
+*/
 .center {
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;         /* change to 'flex-end' if you want bottom placement */
+  justify-content: center;
+  /* padding: min(3vh, 24px); */
 }
 
+/* Panel */
 .panel {
-    text-align:center;
+  width: var(--panel-width);
+  max-width: var(--panel-max-width-percent);
+  height: var(--panel-height);
+  background: rgba(255, 255, 255, var(--bg-opacity));
+  padding: var(--panel-padding) var(--panel-padding) 0 var(--panel-padding);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+  overflow: hidden;
+  text-align: center;
 }
 
+/* Steps (single page panels) — updated for vertical stacking & centering */
+.step {
+  display: none;
+  opacity: 0;
+  width: 100%;
+  height: 100%;                /* fill the panel height */
+  box-sizing: border-box;
+  gap: var(--gap);
+  align-items: center;
+  flex-direction: column;      /* stack children vertically */
+  justify-content: center;     /* vertically center children inside the step */
+  padding: 0;                  /* child spacing handled by gap / element margins */
+}
+
+/* when active, show and allow vertical stacking */
+.step.active {
+  display: flex;
+  opacity: 1;
+}
+
+/* If a step contains an image that should sit below content without pushing it
+   off-screen, give it a limited max-height and remove large top margins. */
+.step .idle-char {
+  max-height: 40vh;   /* limits the image height to 40% of viewport height */
+
+	width: clamp(140px, 38%, 320px);
+  height: auto;
+  object-fit: contain;
+  margin-top: clamp(6px, 2vh, 28px);
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Step 1 specifics */
+#step-1 {
+  gap: clamp(12px, 2.4vh, 36px);
+  justify-content: space-between;
+  /* align-items: center; */
+}
+
+/* Headings & text */
+.panel h1 {
+  margin: 0;
+  font-size: var(--font-xl);
+  line-height: 1.05;
+  color: #111;
+  text-wrap: balance;
+}
+
+/* For the special Step-1 heading that needs white */
+#step-1 h1 { color: #fff; }
+
+/* ===== center language buttons vertically inside step-2 ===== */
+
+/* make the heading compact so it doesn't push things down */
+#step-2 p {
+  /* margin: 0 0 clamp(8px, 1.5vh, 18px); top 0, bottom small gap */
+  font-size: var(--font-md);
+	color: var(--green-accent1);
+  line-height: 1.05;
+}
+
+/* vertically center the language buttons by using auto margins */
+#step-2 .lang-buttons {
+  /* auto margins center it inside the flex column step */
+  /* margin-top: auto;
+  margin-bottom: auto; */
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 2vh, 20px);
+  width: 100%;
+}
+
+.lang-buttons button {
+	color: #fff;
+	background-color: var(--green-accent1);
+}
+
+/* keep the row layout on wider screens, but still centered vertically */
+@media (min-width: 700px) {
+  /* #step-2 .lang-buttons { flex-direction: row; justify-content: center; } */
+  #step-2 .lang-buttons button { width: clamp(180px, 28vw, 300px); }
+}
+
+/* if viewport is very short, allow scrolling inside the step instead of clipping */
+#step-2 {
+  min-height: 0;         /* allow flex children to shrink properly */
+  /* padding adjustments optional:
+     padding-top and -bottom are controlled by .panel; keep them small if needed */
+}
+
+/* Shift contents upward only on Step 2 */
+#step-2 {
+  /* ensure step can shrink/scroll correctly */
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* when step-2 is active, align content to the top with some breathing room */
+#step-2.active {
+  justify-content: flex-start;          /* move children toward top of panel */
+  padding-top: clamp(10px, 11vh, 200px);  /* add breathing room from top */
+  padding-bottom: clamp(14px, 3vh, 48px); /* keep bottom padding so buttons aren't flush */
+}
+
+
+/* visual tweak: slightly reduce button width on very narrow screens */
+@media (max-width: 420px) {
+  #step-2 .lang-buttons button {
+    width: clamp(140px, 42vw, 220px);
+  }
+}
+
+/* Buttons */
 button {
-    font-size:1.6rem;
-    padding:18px 28px;
-    margin:12px;
-    border-radius:8px;
+  font-size: var(--font-lg);
+  font-weight: 600;
+  padding: 12px 20px;
+  /* margin: 2vh 0 4vh 0; */
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  width: var(--btn-width);
+  max-width: 100%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+
+	/* Required for transition: Ensure a transition duration is defined */
+	transition: transform 0.15s ease-out;
 }
 
-.status {
-    margin-top:16px;
-    font-size:1rem;
+button:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.185);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#start-btn {
+	color: var(--green-accent1);
+}
+
+#start-btn:hover {
+	transform: translate(0.09em, 0.04em);
+}
+
+#start-btn:focus {
+	background-color: var(--muted);
+}
+
+/* On wider screens place language buttons side-by-side */
+@media (min-width: 700px) {
+  .lang-buttons { flex-direction: row; gap: clamp(12px, 2.2vw, 28px); }
+  .lang-buttons button { width: clamp(180px, 28vw, 300px); }
+}
+
+/* Step 3 message */
+#step3-message {
+  font-size: clamp(1.05rem, 2.8vw, 1.9rem);
+  margin-top: 6px;
+  color: var(--green-accent1);
+  padding: 0 12px;
+}
+
+/* Step 4/placeholder styling */
+#step-4 h1 { font-size: clamp(1.2rem, 2.6vw, 2rem); }
+#step-4 p { font-size: var(--font-md); }
+
+/* Small screens / very short viewports: reduce heights to avoid overflow */
+@media (max-height: 520px) {
+  :root {
+    --panel-height: 86vh;
+    --panel-padding: 14px;
+    --font-xl: clamp(1.2rem, 4vw, 2rem);
+  }
+}
+
+/* Utility to make panel sit anchored to bottom (if you prefer)
+   Add a class 'bottom-anchored' to the .center element (or body) to enable.
+*/
+.center.bottom-anchored {
+  align-items: flex-end;
+  /* padding-bottom: clamp(18px, 6vh, 48px); */
+}
+
+
+#step-4 h1, #step-4 p {
+  color: var(--green-accent1);
+}
+
+#step-4 h1 {
+  font-size: var(--font-xl);
+}
+
+#step-4 p {
+  font-size: var(--font-lg);
+}
+
+/* Step 4 Home button tweak */
+#home-btn {
+  margin-top: 8px;
+  width: clamp(140px, 28vw, 260px);
+  font-weight: 600;
+
+  background-color: var(--green-accent1);
+  color: #fff;
 }

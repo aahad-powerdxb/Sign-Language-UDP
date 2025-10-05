@@ -15,5 +15,8 @@ module.exports = {
   UDP_MESSAGE_EN: process.env.UDP_MESSAGE_EN || 'ENGLISH_SIGNAL',
   UDP_MESSAGE_AR: process.env.UDP_MESSAGE_AR || 'ARABIC_SIGNAL',
 
-  LOG_UDP: (process.env.LOG_UDP || 'true').toLowerCase() === 'true'
+  LOG_UDP: (process.env.LOG_UDP || 'true').toLowerCase() === 'true',
+
+  // prefix used to detect congrats trigger; e.g. CONGRATS_STRING=end=  (incoming UDP "end=5")
+  CONGRATS_STRING: process.env.CONGRATS_STRING || 'end='
 };

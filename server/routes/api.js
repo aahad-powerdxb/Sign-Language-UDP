@@ -44,7 +44,8 @@ router.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     udpTarget: { host: config.UDP_TARGET_HOST, port: config.UDP_TARGET_PORT },
-    listener: config.START_UDP_LISTENER ? { host: config.UDP_LISTEN_HOST, port: config.UDP_LISTEN_PORT } : null
+    listener: config.START_UDP_LISTENER ? { host: config.UDP_LISTEN_HOST, port: config.UDP_LISTEN_PORT } : null,
+    congrats_string: config.CONGRATS_STRING
   });
 });
 

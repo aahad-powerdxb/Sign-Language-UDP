@@ -4,23 +4,57 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/index.css">
-    <title>UDP Button Panel</title>
+    <title>UDP Button Panel — Steps</title>
   </head>
   <body>
-    <div class="center">
+    <main class="center bottom-anchored">
       <div class="panel">
-        <h1>Language Signal Sender</h1>
-        <div>
-          <button id="btn-en">English</button>
-          <button id="btn-ar">Arabic</button>
-        </div>
-        <div class="status" id="status">Ready</div>
 
-        <div class="received" id="last-received" style="margin-top:12px; font-size:0.95rem; color:#222;">
+        <!-- Step 1 -->
+        <section id="step-1" class="step active" aria-hidden="false" data-step="1">
+          <h1>Learn to communicate in sign language</h1>
+          <button id="start-btn">Start</button>
+          <img src="./img/idle_char.png" alt="IDLE CHARACTER" class="idle-char">
+        </section>
+
+        <!-- Step 2 -->
+        <section id="step-2" class="step" aria-hidden="true" data-step="2">
+          <p>Choose Language</p>
+          <div class="lang-buttons">
+            <button id="btn-en" data-lang="en">English</button>
+            <button id="btn-ar" data-lang="ar">Arabic</button>
+          </div>
+
+          <!-- <div class="status" id="status">Ready</div> -->
+
+          <!-- last incoming UDP message display -->
+          <!-- <div class="received" id="last-received" style="margin-top:12px; font-size:0.95rem; color:#222;">
             Last received: <span id="last-received-text">none</span>
-        </div>
+          </div> -->
+        </section>
+
+        <!-- Step 3 -->
+        <section id="step-3" class="step" aria-hidden="true" data-step="3">
+          <p id="step3-message"></p>
+          <!-- optional "continue" placeholder; not wired to step 4 yet -->
+          <div style="margin-top:18px;">
+          </div>
+        </section>
+
+        <!-- Step 4 -->
+        <section id="step-4" class="step" aria-hidden="true" data-step="4">
+          <h1>Congratulations</h1>
+          <p id="step4-message"></p>
+
+          <!-- Home button: returns to Step 1 immediately -->
+          <div style="margin-top:18px;">
+            <button id="home-btn" type="button">Home</button>
+          </div>
+        </section>
+
+
       </div>
-    </div>
+    </main>
 
     <script type="module" src="/js/index.js" defer></script>
   </body>

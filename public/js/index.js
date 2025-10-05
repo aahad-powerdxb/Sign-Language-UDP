@@ -33,27 +33,55 @@ function parseCongratsN(text, prefix) {
   return n;
 }
 
+/* helper: map single western digit 0-9 to Arabic-Indic digits (٠١٢٣٤٥٦٧٨٩)
+   If n is a single digit 0..9 it returns the mapped char, otherwise returns null. */
+function mapSingleDigitToArabicIndic(n) {
+  const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+  if (typeof n !== 'number') return null;
+  if (!Number.isInteger(n)) return null;
+  if (n >= 0 && n <= 9) return map[n];
+  return null;
+}
+
 /* helper: set the Step 4 message dynamically based on language
-   Updates both the H1 and the paragraph, and sets text direction for Arabic.
-   This preserves the old working behaviour and only modifies the Home button
-   text/dir if the element exists (no early returns that interfere). */
+   Shows a different H1 when n === 0 ("Better luck next time!") and the Arabic equivalent.
+   Also adjusts dir/textAlign for Arabic and updates Home button label if present.
+*/
 function setStep4Congratulations(n, lang = 'en') {
   const p = document.querySelector('#step4-message');
   const h1 = document.querySelector('#step-4 h1');
-  if (!p || !h1) return; // still safe-guard: if the DOM doesn't match, abort
+  if (!p || !h1) return;
+
+  // Decide content based on n === 0 vs n > 0
+  const isZero = Number(n) === 0;
 
   if (lang === 'ar') {
-    // Arabic
-    h1.textContent = 'تهانينا!'; // Arabic for "Congratulations!"
-    p.innerHTML = `لقد تعلمت ${n} كلمات في لغة الإشارة`;
-    // set RTL direction so Arabic renders correctly
+    // Arabic content
+    if (isZero) {
+      h1.textContent = 'حظًا أوفر في المرة القادمة!'; // "Better luck next time!"
+      p.innerHTML = 'لم تتعلّم أي كلمات هذه المرة.';   // "You didn\'t learn any words this time."
+    } else {
+      h1.textContent = 'تهانينا!'; // "Congratulations!"
+
+      // Try to map single digit 0-9 to Arabic-Indic. If mapping exists, use it,
+      // otherwise fall back to showing the western number as-is.
+      const mapped = mapSingleDigitToArabicIndic(n);
+      if (mapped !== null) {
+        // Example Arabic sentence: "لقد تعلمت ٥ كلمات في لغة الإشارة"
+        p.innerHTML = `لقد تعلمت ${mapped} كلمات في لغة الإشارة`;
+      } else {
+        // No mapping (multi-digit or out-of-range): show the number as-is
+        p.innerHTML = `لقد تعلمت ${n} كلمات في لغة الإشارة`;
+      }
+    }
+
+    // RTL adjustments
     h1.setAttribute('dir', 'rtl');
     p.setAttribute('dir', 'rtl');
-    // optionally align right for Arabic
     h1.style.textAlign = 'right';
     p.style.textAlign = 'right';
 
-    // If Home button exists, update its label to Arabic but don't change event listeners
+    // Update Home button label if present
     const homeBtn = document.querySelector('#home-btn');
     if (homeBtn) {
       homeBtn.textContent = 'الرئيسية';
@@ -61,16 +89,22 @@ function setStep4Congratulations(n, lang = 'en') {
       homeBtn.style.textAlign = 'center';
     }
   } else {
-    // English
-    h1.textContent = 'Congratulations';
-    p.innerHTML = `You have learned ${n} words in sign language`;
-    // reset direction and alignment to LTR/default
+    // English content
+    if (isZero) {
+      h1.textContent = 'Better luck next time!';
+      p.innerHTML = "You didn't learn any words this time.";
+    } else {
+      h1.textContent = 'Congratulations!';
+      p.innerHTML = `You have learned ${n} words in sign language`;
+    }
+
+    // reset LTR
     h1.removeAttribute('dir');
     p.removeAttribute('dir');
     h1.style.textAlign = '';
     p.style.textAlign = '';
 
-    // If Home button exists, restore English label
+    // Restore Home button label to English
     const homeBtn = document.querySelector('#home-btn');
     if (homeBtn) {
       homeBtn.textContent = 'Home';

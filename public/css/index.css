@@ -295,3 +295,56 @@ button:disabled {
   background-color: var(--green-accent1);
   color: #fff;
 }
+
+/* stacked bilingual heading for Step 2 */
+.choose-language {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.05;
+  /* use your design token for size */
+  font-size: var(--font-lg);
+}
+
+/* Arabic line (above) — RTL handling and appropriate font fallback */
+.choose-language .lang-ar {
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-weight: 700;
+  font-size: calc(var(--font-lg) * 0.95);
+  /* prefer an Arabic-capable font if available */
+  font-family: "Segoe UI", "Tahoma", "Noto Naskh Arabic", "Arial", sans-serif;
+}
+
+/* English line below */
+.choose-language .lang-en {
+  font-weight: 600;
+  font-size: var(--font-lg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Step 1 bilingual heading */
+.bilingual-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  line-height: 1.05;
+}
+
+.bilingual-heading .heading-ar {
+  direction: rtl;
+  unicode-bidi: isolate;
+  color: #fff; /* keep consistent with step-1 h1 color */
+  font-weight: 700;
+  font-size: clamp(1.4rem, 4.5vw, 2.8rem);
+}
+
+.bilingual-heading .heading-en {
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(1.3rem, 4.5vw, 2.9rem);
+}

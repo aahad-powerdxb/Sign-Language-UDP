@@ -64,9 +64,9 @@ export function showStep(n, opts = {}) {
     if (msgEl) {
       if (opts.lang === 'ar') {
         // Arabic translation
-        msgEl.textContent = 'تابع مع الصورة الرمزية لتعلم لغة الإشارة!';
+        msgEl.textContent = 'ﺣﺎول ﻣﻄﺎﺑﻘﺔ ﺣﺮﻛﺎت اﻟﺸﺨﺼﻴﺔ';
       } else {
-        msgEl.textContent = 'Follow along with the avatar to learn sign language!';
+        msgEl.textContent = 'Try to follow the avatar';
       }
     }
   }

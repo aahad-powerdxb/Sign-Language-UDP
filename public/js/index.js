@@ -34,41 +34,44 @@ function parseCongratsN(text, prefix) {
 }
 
 /* helper: set the Step 4 message dynamically based on language
-   Updates H1, paragraph, and Home button text/direction */
+   Updates both the H1 and the paragraph, and sets text direction for Arabic.
+   This preserves the old working behaviour and only modifies the Home button
+   text/dir if the element exists (no early returns that interfere). */
 function setStep4Congratulations(n, lang = 'en') {
   const p = document.querySelector('#step4-message');
   const h1 = document.querySelector('#step-4 h1');
-  const homeBtn = document.querySelector('#home-btn');
-
-  if (!p || !h1) return;
+  if (!p || !h1) return; // still safe-guard: if the DOM doesn't match, abort
 
   if (lang === 'ar') {
-    // Arabic heading + paragraph
-    h1.textContent = 'تهانينا!'; // "Congratulations!"
+    // Arabic
+    h1.textContent = 'تهانينا!'; // Arabic for "Congratulations!"
     p.innerHTML = `لقد تعلمت ${n} كلمات في لغة الإشارة`;
-    // set RTL direction and right alignment
+    // set RTL direction so Arabic renders correctly
     h1.setAttribute('dir', 'rtl');
     p.setAttribute('dir', 'rtl');
+    // optionally align right for Arabic
     h1.style.textAlign = 'right';
     p.style.textAlign = 'right';
 
-    // update Home button text to Arabic if present
+    // If Home button exists, update its label to Arabic but don't change event listeners
+    const homeBtn = document.querySelector('#home-btn');
     if (homeBtn) {
-      homeBtn.textContent = 'الرئيسية'; // Arabic for "Home"
+      homeBtn.textContent = 'الرئيسية';
       homeBtn.setAttribute('dir', 'rtl');
-      homeBtn.style.textAlign = 'center'; // keep centered label
+      homeBtn.style.textAlign = 'center';
     }
   } else {
     // English
     h1.textContent = 'Congratulations';
     p.innerHTML = `You have learned ${n} words in sign language`;
-    // reset direction/alignment
+    // reset direction and alignment to LTR/default
     h1.removeAttribute('dir');
     p.removeAttribute('dir');
     h1.style.textAlign = '';
     p.style.textAlign = '';
 
-    // set Home button back to English
+    // If Home button exists, restore English label
+    const homeBtn = document.querySelector('#home-btn');
     if (homeBtn) {
       homeBtn.textContent = 'Home';
       homeBtn.removeAttribute('dir');
@@ -77,16 +80,18 @@ function setStep4Congratulations(n, lang = 'en') {
   }
 }
 
-/* move to home (Step 1), clearing step4 timer and resetting selectedLang
-   also reset Home button text back to English for the next session */
+/* move to home (Step 1), clearing step4 timer and resetting selectedLang.
+   Keep this minimal and safe so it doesn't interfere with normal flow. */
 function goHome() {
   if (step4Timer) {
     clearTimeout(step4Timer);
     step4Timer = null;
   }
+
+  // reset any session-local state
   selectedLang = null;
 
-  // Reset home button label back to English (in case it was Arabic)
+  // restore Home button text if present (do not touch event listeners)
   const homeBtn = document.querySelector('#home-btn');
   if (homeBtn) {
     homeBtn.textContent = 'Home';
@@ -94,6 +99,7 @@ function goHome() {
     homeBtn.style.textAlign = '';
   }
 
+  // show initial Step 1
   showStep(1);
 }
 

@@ -245,16 +245,74 @@ button:disabled {
 }
 
 /* Step 3 message */
-#step3-message {
+/* #step3-message {
   font-size: clamp(1.05rem, 2.8vw, 1.9rem);
   margin-top: 6px;
   color: var(--green-accent1);
   padding: 0 12px;
 }
 
-/* Step 4/placeholder styling */
+Step 4/placeholder styling
 #step-4 h1 { font-size: clamp(1.2rem, 2.6vw, 2rem); }
-#step-4 p { font-size: var(--font-md); }
+#step-4 p { font-size: var(--font-md); } */
+
+/* New styling for Step 3 & Step 4 body text: bilingual-message */
+.bilingual-message {
+  margin-top: 6px;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px; /* small gap between languages */
+  line-height: 1.1;
+  color: var(--green-accent1); /* Text color inherited by spans */
+}
+
+/* Arabic message line (top) */
+.bilingual-message .message-ar {
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 2.8vw, 2.3rem); /* Use size for step 3 message */
+  /* prefer an Arabic-capable font if available */
+  font-family: "Segoe UI", "Tahoma", "Noto Naskh Arabic", "Arial", sans-serif;
+}
+
+/* English message line (bottom) */
+.bilingual-message .message-en {
+  font-weight: 600;
+  font-size: clamp(0.95rem, 2.4vw, 2.2rem); /* Slightly smaller than Arabic line */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+
+/* Update Step 4 heading SPANs inside bilingual-heading */
+#step-4 .bilingual-heading .heading-ar,
+#step-4 .bilingual-heading .heading-en {
+  /* Ensure they are treated as block elements for stacking/sizing */
+  display: block; 
+  
+  color: var(--green-accent1);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.05;
+}
+
+#step-4 .bilingual-heading .heading-ar {
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-size: clamp(1.8rem, 4vw, 3.3rem); /* Size for Arabic H1 */
+  font-family: "Segoe UI", "Tahoma", "Noto Naskh Arabic", "Arial", sans-serif;
+}
+
+#step-4 .bilingual-heading .heading-en {
+  font-size: clamp(1.6rem, 3.5vw, 3.2rem); /* Size for English H1 */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* Step 4 p is NO LONGER USED, replaced by .bilingual-message */
+#step-4 p { display: none; } /* KEEP this line to hide the original P tag */
+
 
 /* Small screens / very short viewports: reduce heights to avoid overflow */
 @media (max-height: 520px) {
@@ -294,6 +352,32 @@ button:disabled {
 
   background-color: var(--green-accent1);
   color: #fff;
+  
+  /* NEW: Set button to display children vertically */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px; /* Small gap between the two lines */
+  padding: 8px 20px; /* Adjust padding since there are two lines */
+}
+
+/* Style the Arabic part (top) */
+#home-btn .home-btn-ar {
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-size: clamp(0.9rem, 1.8vw, 1.3rem);
+  font-weight: 700;
+  /* Ensure the text color is white/inherited from the button */
+  color: inherit;
+  font-family: "Segoe UI", "Tahoma", "Noto Naskh Arabic", "Arial", sans-serif;
+}
+
+/* Style the English part (bottom) */
+#home-btn .home-btn-en {
+  font-size: clamp(0.75rem, 1.6vw, 1.1rem);
+  font-weight: 600;
+  color: inherit;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 /* stacked bilingual heading for Step 2 */

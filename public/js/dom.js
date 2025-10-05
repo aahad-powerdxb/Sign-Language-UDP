@@ -58,16 +58,14 @@ export function showStep(n, opts = {}) {
   }
   // -----------------------------------------------------
 
-  // If showing step 3 and language provided, update message text
-  if (n === 3 && opts.lang) {
-    const msgEl = $id(ids.step3Message);
+  // If showing step 3, update message text
+  if (n === 3) {
+    const msgEl = $id(ids.step3Message); // This is now the .bilingual-message div
     if (msgEl) {
-      if (opts.lang === 'ar') {
-        // Arabic translation
-        msgEl.textContent = 'ﺣﺎول ﻣﻄﺎﺑﻘﺔ ﺣﺮﻛﺎت اﻟﺸﺨﺼﻴﺔ';
-      } else {
-        msgEl.textContent = 'Try to follow the avatar';
-      }
+      const arSpan = msgEl.querySelector('.message-ar');
+      const enSpan = msgEl.querySelector('.message-en');
+      if (arSpan) arSpan.textContent = 'ﺣﺎول ﻣﻄﺎﺑﻘﺔ ﺣﺮﻛﺎت اﻟﺸﺨﺼﻴﺔ'; // Arabic
+      if (enSpan) enSpan.textContent = 'Try to follow the avatar'; // English
     }
   }
 }

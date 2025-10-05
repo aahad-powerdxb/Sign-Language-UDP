@@ -48,71 +48,78 @@ function mapSingleDigitToArabicIndic(n) {
    Also adjusts dir/textAlign for Arabic and updates Home button label if present.
 */
 function setStep4Congratulations(n, lang = 'en') {
-  const p = document.querySelector('#step4-message');
-  const h1 = document.querySelector('#step-4 h1');
-  if (!p || !h1) return;
+  // Select the new bilingual containers
+  const msgContainer = document.querySelector('#step4-message');
+  const h1Container = document.querySelector('#step4-heading');
+  const homeBtn = document.querySelector('#home-btn');
+
+  if (!msgContainer || !h1Container) return;
+
+  // Spans for the message text
+  const pAr = msgContainer.querySelector('.message-ar');
+  const pEn = msgContainer.querySelector('.message-en');
+  // Spans for the heading text
+  const h1Ar = h1Container.querySelector('.heading-ar');
+  const h1En = h1Container.querySelector('.heading-en');
+
+  if (!pAr || !pEn || !h1Ar || !h1En) return;
 
   // Decide content based on n === 0 vs n > 0
   const isZero = Number(n) === 0;
 
-  if (lang === 'ar') {
-    // Arabic content
-    if (isZero) {
-      h1.textContent = 'حظًا أوفر في المرة القادمة!'; // "Better luck next time!"
-      p.innerHTML = 'لم تتعلّم أي كلمات هذه المرة.';   // "You didn\'t learn any words this time."
-    } else {
-      h1.textContent = 'تهانينا!'; // "Congratulations!"
+  // --- ARABIC Content ---
+  if (isZero) {
+    h1Ar.textContent = 'حظًا أوفر في المرة القادمة!'; // "Better luck next time!"
+    pAr.innerHTML = 'لم تتعلّم أي كلمات هذه المرة.';   // "You didn\'t learn any words this time."
+  } else {
+    h1Ar.textContent = 'تهانينا!'; // "Congratulations!"
 
-      // Try to map single digit 0-9 to Arabic-Indic. If mapping exists, use it,
-      // otherwise fall back to showing the western number as-is.
-      const mapped = mapSingleDigitToArabicIndic(n);
-      if (mapped !== null) {
-        // Example Arabic sentence: "لقد تعلمت ٥ كلمات في لغة الإشارة"
-        p.innerHTML = `لقد تعلمت ${mapped} كلمات في لغة الإشارة`;
-      } else {
-        // No mapping (multi-digit or out-of-range): show the number as-is
-        p.innerHTML = `لقد تعلمت ${n} كلمات في لغة الإشارة`;
-      }
+    // Try to map single digit 0-9 to Arabic-Indic.
+    const mapped = mapSingleDigitToArabicIndic(n);
+    if (mapped !== null) {
+      // Example Arabic sentence: "لقد تعلمت ٥ كلمات في لغة الإشارة"
+      pAr.innerHTML = `لقد تعلمت ${mapped} كلمات في لغة الإشارة`;
+    } else {
+      // No mapping (multi-digit or out-of-range): show the number as-is
+      pAr.innerHTML = `لقد تعلمت ${n} كلمات في لغة الإشارة`;
+    }
+  }
+
+  // --- ENGLISH Content ---
+  if (isZero) {
+    h1En.textContent = 'Better luck next time!';
+    pEn.innerHTML = "You didn't learn any words this time.";
+  } else {
+    h1En.textContent = 'Congratulations!';
+    pEn.innerHTML = `You have learned ${n} words in sign language`;
+  }
+
+
+  // --- Home button language setting (UPDATED TO USE SPANS) ---
+  if (homeBtn) {
+    const arSpan = homeBtn.querySelector('.home-btn-ar');
+    const enSpan = homeBtn.querySelector('.home-btn-en');
+    
+    // Ensure spans exist before trying to set properties
+    if (arSpan && enSpan) {
+        // Set the text for both spans (always the same, regardless of session lang)
+        arSpan.textContent = 'الرئيسية';
+        enSpan.textContent = 'Home';
     }
 
-    // RTL adjustments
-    h1.setAttribute('dir', 'rtl');
-    p.setAttribute('dir', 'rtl');
-    h1.style.textAlign = 'right';
-    p.style.textAlign = 'right';
-
-    // Update Home button label if present
-    const homeBtn = document.querySelector('#home-btn');
-    if (homeBtn) {
-      homeBtn.textContent = 'الرئيسية';
+    // Set the overall button direction/alignment (optional, for consistency)
+    if (lang === 'ar') {
+      // NOTE: We no longer set textContent, but we keep dir/textAlign in case it's used
       homeBtn.setAttribute('dir', 'rtl');
       homeBtn.style.textAlign = 'center';
-    }
-  } else {
-    // English content
-    if (isZero) {
-      h1.textContent = 'Better luck next time!';
-      p.innerHTML = "You didn't learn any words this time.";
     } else {
-      h1.textContent = 'Congratulations!';
-      p.innerHTML = `You have learned ${n} words in sign language`;
-    }
-
-    // reset LTR
-    h1.removeAttribute('dir');
-    p.removeAttribute('dir');
-    h1.style.textAlign = '';
-    p.style.textAlign = '';
-
-    // Restore Home button label to English
-    const homeBtn = document.querySelector('#home-btn');
-    if (homeBtn) {
-      homeBtn.textContent = 'Home';
       homeBtn.removeAttribute('dir');
       homeBtn.style.textAlign = '';
     }
   }
 }
+
+// ... (rest of index.js) ...
 
 /* move to home (Step 1), clearing step4 timer and resetting selectedLang.
    Keep this minimal and safe so it doesn't interfere with normal flow. */
@@ -125,10 +132,19 @@ function goHome() {
   // reset any session-local state
   selectedLang = null;
 
-  // restore Home button text if present (do not touch event listeners)
+  // restore Home button text if present (UPDATED TO USE SPANS)
   const homeBtn = document.querySelector('#home-btn');
   if (homeBtn) {
-    homeBtn.textContent = 'Home';
+    const arSpan = homeBtn.querySelector('.home-btn-ar');
+    const enSpan = homeBtn.querySelector('.home-btn-en');
+
+    // Restore text content to spans
+    if (arSpan && enSpan) {
+        arSpan.textContent = 'الرئيسية';
+        enSpan.textContent = 'Home';
+    }
+
+    // Restore direction/alignment
     homeBtn.removeAttribute('dir');
     homeBtn.style.textAlign = '';
   }
@@ -136,6 +152,7 @@ function goHome() {
   // show initial Step 1
   showStep(1);
 }
+
 
 /* show step 4 and start auto-return timer */
 function enterStep4WithAutoReturn() {
